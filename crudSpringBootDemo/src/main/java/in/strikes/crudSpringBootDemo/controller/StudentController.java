@@ -4,10 +4,7 @@ import in.strikes.crudSpringBootDemo.entity.Student;
 import in.strikes.crudSpringBootDemo.service.StudentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/students")
@@ -22,6 +19,26 @@ public class StudentController {
         Student createdStudent=service.createStudent(student);
         return ResponseEntity
                 .status(HttpStatus.CREATED).body(createdStudent);
+
+    }
+    @GetMapping("/get/{id}")
+    public ResponseEntity<Student> getStudent(@PathVariable Long id){
+        Student studentRep= service.getStudent(id);
+        if(studentRep==null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity
+                .ok(studentRep);
+    }
+    @DeleteMapping(("/delete/{id}"))
+    public ResponseEntity<String> deleteStudent(@PathVariable Long id){
+        Boolean isDeleted=service.deleteStudent(id);
+        if(!isDeleted){
+            return ResponseEntity.notFound().build();
+
+        }
+        return ResponseEntity.ok("Deleted");
+
 
     }
 }
